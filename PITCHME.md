@@ -61,11 +61,13 @@ Rails.cache.fetch(cache_key, namespace: 'cache', expire_in: 5.hours) do
 end
 ```
 
-
 ---
 
 ### Traps I've fallen (1)
 *- TypeError*
+```
+=> No _dump_data is defined for class Proc
+```
 *- Only accept Basic data format like String, Array, Hash*
 ```ruby
 Rails.cache.fetch(cache_key, options) do
@@ -86,3 +88,4 @@ config.cache_store = :redis_store, "redis://#{SecretSettings.redis.host}:#{Secre
 
 ---
 
+# Thanks for your time
