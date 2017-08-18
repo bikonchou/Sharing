@@ -43,6 +43,20 @@ $redis.get(cache_key)
 
 ---
 
+### Cache Key
+*- The cache_key used in above example*
+```ruby
+"editor/image/list/pixabay/car-p1"
+```
+*- There's a handy method in ActiveRecord Object*
+```ruby
+project = Store::Project.last
+project.cache_key
+=> "store/projects/25-20170818024348273226"
+```
+
+---
+
 ### Better not to
 *- Set options in global config*
 ```ruby
