@@ -1,7 +1,7 @@
 <!-- $theme: default -->
 <!-- page_number: true -->
 
-### Remove Turbolinks from Rails
+### How To Disable Turbolinks from Rails
 
 ---
 
@@ -23,11 +23,11 @@
 
 ---
 
-### We found all AJAX forms with "remote: true" are not working
+### All AJAX forms with "remote: true" are not working
 
 ---
 
-![screenshot](https://github.com/bikonchou/Sharing/blob/how_to_disable_turbolinks/assets/images/JackyWTF.jpg?raw=true)
+![screenshot](https://github.com/bikonchou/Sharing/blob/how_to_disable_turbolinks/assets/images/jacky_WTF.jpg?raw=true)
 
 ---
 
