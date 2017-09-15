@@ -67,9 +67,6 @@ module Writer
   class RegistrationsController < Devise::RegistrationsController
     def create
       run Registration::Create do |op|
-		.
-       	.
-        .
         return redirect_to after_registration_path(op.model)
       end
     end
@@ -84,14 +81,10 @@ end
 module Writer
   class RegistrationsController < Devise::RegistrationsController
     def create
-      run Registration::Create do |op|
-		.
-       	.
-        .    
+      run Registration::Create do |op|    
         return render js: %(window.location = '#{desired_redirect_url}')
       end
     end
   end
 end
 ```
----
