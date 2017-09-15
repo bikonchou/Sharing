@@ -1,105 +1,95 @@
 <!-- $theme: default -->
 <!-- page_number: true -->
 
-### Caching with Rails
-*Using Redis to Cache Data*
+### Remove Turbolinks from Rails
 
 ---
 
 ### Scenario:
-*- 3 party API blocks identical requests in seconds.*
-![screenshot](https://github.com/bikonchou/Sharing/blob/caching_with_rails/assets/images/screenshot1.png?raw=true)
+*- We removed Turbolinks, because it's not compatible with LiveChat.*
 
 ---
 
-### Just few steps to go:
-*- install Redis*
-*- install 'redis-rails'*
-```ruby
-# Gemfile
-gem 'redis-rails'
-```
-*- config environment.rb*
-```ruby
-# :redis_store, 'redis:://Host/Database/Namespace', { options }
-config.cache_store = :redis_store, 'redis://localhost:6379/0/cache', { expires_in: 90.minutes }
-```
+### Remove Turbolinks entirely
+*- http://codkal.com/rails-how-to-remove-turbolinks/*
 
 ---
 
-### My first commit
-```ruby
-# config/initializers/redis.rb
-$redis = Redis::Namespace.new("cache", redis: Redis.new)
-
-# Set cache
-3party_response = request_3party_api
-$redis.set(cache_key, 3party_response)
-
-# Get cache
-$redis.get(cache_key)
-# => 3party_response
-```
+### Looks great! But......
 
 ---
 
-### Cache Key
-*- The cache_key used in above example*
-```ruby
-"editor/image/list/pixabay/car-p1"
+### Several bugs reported by QAs.
+
+![screenshot](https://github.com/bikonchou/Sharing/blob/disable_turbolinks/assets/images/JackyWTF.jpg?raw=true)
+
+---
+
+### We found all AJAX forms with "remote: true" are not working
+
+---
+
+### Log when enabled Turbolinks
 ```
-*- There's a handy method in ActiveRecord Object*
-```ruby
-project = Store::Project.last
-project.cache_key
-=> "store/projects/25-20170818024348273226"
+Started POST "/writers" for ::1 at 2017-09-15 15:02:13 +0800
+Processing by Writer::RegistrationsController#create as JS
+Parameters: {"utf8"=>"✓", "writer"=>{"profile_attributes"=>{"first_name"=>"TEST", "last_name"=>"TEST"...}
+Redirected to http://localhost:3000/writer/projects
+Completed 200 OK in 231ms (ActiveRecord: 19.7ms)
+
+Started GET "/writer/projects" for ::1 at 2017-09-15 15:02:13 +0800
+Processing by Writer::ProjectsController#index as JS
 ```
 
 ---
 
-### Better not to
-*- Set options in global config*
-```ruby
-config.cache_store = :redis_store, 'redis://localhost:6379/0/'
+### Log when disabled Turbolinks
 ```
-### Better to 
-*- Use Rails default cache object*
-```ruby
-Rails.cache.write(cache_key, value, expire_in: 5.hours)
-Rails.cache.read(cache_key) # => value
+Started POST "/writers" for ::1 at 2017-09-15 15:02:13 +0800
+Processing by Writer::RegistrationsController#create as JS
+Parameters: {"utf8"=>"✓", "writer"=>{"profile_attributes"=>{"first_name"=>"TEST", "last_name"=>"TEST"...}
+Redirected to http://localhost:3000/writer/projects
+Completed 302 Found in 671ms (ActiveRecord: 12.7ms)
+
+Started GET "/writer/projects" for ::1 at 2017-09-15 15:06:49 +0800
+Processing by Writer::ProjectsController#index as JS
+Rendered writer/projects/index.js.erb (206.9ms)
+Completed 200 OK in 312ms (Views: 207.0ms | ActiveRecord: 36.4ms)
 ```
+
+---
+
+### In Controller
 ```ruby
-# Can Combine above with 'fetch'
-Rails.cache.fetch(cache_key, namespace: 'cache', expire_in: 5.hours) do
-  request_3party_api
+module Writer
+  class RegistrationsController < Devise::RegistrationsController
+    def create
+      run Registration::Create do |op|
+	.
+       	.
+        .    
+        return redirect_to after_registration_path(op.model)
+      end
+    end
+  end
 end
 ```
 
 ---
 
-### Traps I've fallen (1)
-*- TypeError*
-```
-=> No _dump_data is defined for class Proc
-```
-*- Only accept Basic data format like String, Array, Hash*
+### Should revise to
 ```ruby
-Rails.cache.fetch(cache_key, options) do
-  response = request_3party_api
-  # response.class => HTTParty
-  response.to_json
+module Writer
+  class RegistrationsController < Devise::RegistrationsController
+    def create
+      run Registration::Create do |op|
+	.
+       	.
+        .    
+        return render js: %(window.location = '#{desired_redirect_url}')
+      end
+    end
+  end
 end
 ```
 ---
-
-### Traps I've fallen (2)
-*- Redis NOAUTH*
-*- If you've set password in Redis, remember to send it in connection*
-
-```ruby
-config.cache_store = :redis_store, "redis://#{SecretSettings.redis.host}:#{SecretSettings.redis.port}/0/", { password: SecretSettings.redis.password, raise_error: false }
-```
-
----
-
-# Thanks for your time
