@@ -21,11 +21,13 @@
 
 ### Several bugs reported by QAs.
 
-![screenshot](https://github.com/bikonchou/Sharing/blob/disable_turbolinks/assets/images/JackyWTF.jpg?raw=true)
-
 ---
 
 ### We found all AJAX forms with "remote: true" are not working
+
+---
+
+![screenshot](https://github.com/bikonchou/Sharing/blob/how_to_disable_turbolinks/assets/images/JackyWTF.jpg?raw=true)
 
 ---
 
