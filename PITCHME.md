@@ -35,7 +35,7 @@
 ```
 Started POST "/writers" for ::1 at 2017-09-15 15:02:13 +0800
 Processing by Writer::RegistrationsController#create as JS
-Parameters: {"utf8"=>"✓", "writer"=>{"profile_attributes"=>{"first_name"=>"TEST", "last_name"=>"TEST"...}
+Parameters: {"utf8"=>"âœ“", "writer"=>{"profile_attributes"=>{"first_name"=>"TEST", "last_name"=>"TEST"...}
 Redirected to http://localhost:3000/writer/projects
 Completed 200 OK in 231ms (ActiveRecord: 19.7ms)
 
@@ -49,7 +49,7 @@ Processing by Writer::ProjectsController#index as JS
 ```
 Started POST "/writers" for ::1 at 2017-09-15 15:02:13 +0800
 Processing by Writer::RegistrationsController#create as JS
-Parameters: {"utf8"=>"✓", "writer"=>{"profile_attributes"=>{"first_name"=>"TEST", "last_name"=>"TEST"...}
+Parameters: {"utf8"=>"âœ“", "writer"=>{"profile_attributes"=>{"first_name"=>"TEST", "last_name"=>"TEST"...}
 Redirected to http://localhost:3000/writer/projects
 Completed 302 Found in 671ms (ActiveRecord: 12.7ms)
 
@@ -67,9 +67,9 @@ module Writer
   class RegistrationsController < Devise::RegistrationsController
     def create
       run Registration::Create do |op|
-	.
+		.
        	.
-        .    
+        .
         return redirect_to after_registration_path(op.model)
       end
     end
@@ -85,7 +85,7 @@ module Writer
   class RegistrationsController < Devise::RegistrationsController
     def create
       run Registration::Create do |op|
-	.
+		.
        	.
         .    
         return render js: %(window.location = '#{desired_redirect_url}')
